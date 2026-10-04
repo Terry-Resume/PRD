@@ -1,7 +1,7 @@
 /* build.mjs — compiles the JSX and inlines React, the styles and the app into
    one self-contained HTML file. No bundler: the sources share one scope and are
    concatenated in order.
-   Usage: node build.mjs  ->  dist/verdict.html and index.html (served by GitHub Pages) */
+   Usage: node build.mjs  ->  dist/verdict.html and index.html */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { transformSync } from '@babel/core';
 

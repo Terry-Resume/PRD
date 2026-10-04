@@ -1,7 +1,5 @@
 # Verdict — an AI feature quality console
 
-**[Open the live demo →](https://terryjteng.github.io/PRD/)**
-
 Verdict is an eval workbench for a single LLM-powered feature. It holds the golden
 set, the rubric, the prompt variants under test, and the ship gate, then turns a
 run into a decision: **ship it**, **needs review**, or **do not ship**.
@@ -30,14 +28,14 @@ Three decisions the tool encodes:
 
 ## Running it
 
-Use the [live demo](https://terryjteng.github.io/PRD/), or open `index.html` in a
-browser. It is one self-contained file: React is inlined, there is no server, and
-data is kept in `localStorage`.
+Open `index.html` in a browser (or download it from this repo). It is one
+self-contained file: React is inlined, there is no server, and data is kept in
+`localStorage`.
 
-In a plain browser (including GitHub Pages) you can explore the sample project,
-edit the golden set, rubric, gate and variants, label results, compare runs and
-export the report. Live runs need model access, so the top bar shows
-**Sampling off** and **Run evaluation** explains why it can't start.
+In a plain browser you can explore the sample project, edit the golden set, rubric,
+gate and variants, label results, compare runs and export the report. Live runs
+need model access, so the top bar shows **Sampling off** and **Run evaluation**
+explains why it can't start.
 
 Hosted on claude.ai, the same file uses the artifact runtime instead: shared
 storage for the workspace and runs, live model calls for generating and grading,
@@ -50,8 +48,8 @@ npm install
 npm run build      # -> index.html and dist/verdict.html
 ```
 
-`index.html` is committed so GitHub Pages can serve it; rebuild and commit it
-after changing anything in `src/`.
+`index.html` is committed so the app can be opened straight from the repo; rebuild
+and commit it after changing anything in `src/`.
 
 `build.mjs` compiles the JSX with Babel and inlines React, the stylesheet and the
 app into one HTML file. There is no bundler: the sources share one scope and are
