@@ -1,13 +1,22 @@
 {
   "name": "verdict",
   "version": "1.0.0",
-  "description": "Verdict — an eval workbench and ship gate for LLM-powered features",
-  "scripts": {
-    "build": "node build.mjs"
-  },
-  "keywords": [],
+  "description": "Verdict \u2014 an eval workbench and ship gate for LLM-powered features",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
   "author": "Terry Teng",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Terry-Resume/PRD.git"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test \"test/*.test.js\""
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "@babel/core": "^7.29.7",
     "@babel/preset-env": "^7.29.7",
@@ -15,9 +24,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
-  "private": true,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/terryjteng/PRD.git"
+  "devDependencies": {
+    "jsdom": "^25.0.1"
   }
 }

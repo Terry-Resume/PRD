@@ -1,0 +1,25 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run lint --if-present
+      - run: npm test --if-present
+      - run: npm run build
+      - name: Committed index.html is up to date
+        run: git diff --exit-code -- index.html
+      # Fails on critical advisories in production dependencies. High advisories that have no
+      # upstream fix yet are tracked in the README's security notes.
+      - run: npm audit --omit=dev --audit-level=critical

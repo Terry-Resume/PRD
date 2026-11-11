@@ -213,7 +213,9 @@ function reportMarkdown(W, cand, base) {
 
 function resultsCsv(W, run) {
   if (!run) return '';
-  const q = v => { const s = String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  // Model output, case text and rationales are untrusted. A cell that starts with = + - or @ is a formula in Excel and
+  // Sheets, so it gets a leading apostrophe; the rest is standard CSV quoting.
+  const q = v => { let s = String(v ?? ''); if (/^[=+\-@]/.test(s)) s = "'" + s; return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
   const cols = ['case_id', 'scenario', 'tier', 'input', 'expected', 'output', 'pass', ...W.criteria.map(c => c.id), 'failure_mode', 'rationale', 'latency_ms', 'human_label'];
   const rows = (run.results || []).map(r => {
     const c = findCase(W, r.caseId) || {};

@@ -4,6 +4,11 @@ Verdict is an eval workbench for a single LLM-powered feature. It holds the gold
 set, the rubric, the prompt variants under test, and the ship gate, then turns a
 run into a decision: **ship it**, **needs review**, or **do not ship**.
 
+> Part of the **Kato.8 internal-tools suite** (ten tools plus the [`central-command`](https://github.com/Terry-Resume/central-command)
+> hub), built on [`@kato8/core`](https://github.com/Terry-Resume/kato8-core). Verdict is the suite's quality gate: it is how
+> you would decide whether a change to one of the suite's own AI features (the Legal Agent's review prompts, Director's Cut's
+> task prompts) is safe to ship. It is standalone by design, with no server and no accounts.
+
 ![Verdict overview: the ship gate for a support reply drafter](docs/screenshot.png)
 
 It ships with a worked example — a customer-support reply drafter with 14 labeled
@@ -41,15 +46,22 @@ Hosted on claude.ai, the same file uses the artifact runtime instead: shared
 storage for the workspace and runs, live model calls for generating and grading,
 and file downloads for the exports.
 
-## Build
+## Build and test
 
 ```
 npm install
 npm run build      # -> index.html and dist/verdict.html
+npm test           # gate logic, exports, the built page in jsdom
 ```
 
 `index.html` is committed so the app can be opened straight from the repo; rebuild
-and commit it after changing anything in `src/`.
+and commit it after changing anything in `src/`. CI rebuilds it and fails if the committed
+file is out of date.
+
+The tests load the same sources the build concatenates (they share one scope and have no exports),
+so the pure logic in `src/domain.js` is tested without a browser. They cover the pass rule, quantiles,
+regressions, every verdict path (ship, review, do not ship, and why), judge validation, report and
+export formats, and a jsdom load of the built page.
 
 `build.mjs` compiles the JSX with Babel and inlines React, the stylesheet and the
 app into one HTML file. There is no bundler: the sources share one scope and are
@@ -74,5 +86,21 @@ p95 latency figure, and an estimated cost per 1,000 requests.
 ## Exports
 
 - `docs/eval-report.md` — the gate, the numbers, the regressions, the method
-- `eval-results.csv` — one row per case with scores, rationale and your labels
+- `eval-results.csv` — one row per case with scores, rationale and your labels. Model output and case text
+  are untrusted, so any cell that starts with `=`, `+`, `-` or `@` is prefixed with an apostrophe and cannot run as
+  a spreadsheet formula
 - `golden-set.jsonl` — the labeled cases, so the set outlives the tool
+
+## Known limits
+
+- Live runs need the claude.ai artifact runtime (`window.claude`); a plain browser can explore, edit, label and export
+  but not sample. The page makes no network calls of its own and holds no keys.
+- The sample baseline deliberately misses the gate on tone (3.79 against 4.00), which is the reason for the v3 variant.
+- A project with no critical-tier cases passes the critical-tier check (it reports "no critical cases"). Add at least one
+  critical case before trusting a "Ship it".
+- Data is stored in one browser's `localStorage`; export the golden set to keep it.
+- The page loads IBM Plex from Google Fonts and falls back to system fonts if that is blocked.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
